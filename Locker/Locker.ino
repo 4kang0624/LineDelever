@@ -1,36 +1,36 @@
 #include "WiFiEsp.h"
 #include <Servo.h>
 
-char ssid[] = "Galaxy S21 Ultra 5G";            // your network SSID (name)
-char pass[] = "password";        // your network password
-int status = WL_IDLE_STATUS;     // the Wifi radio's status
-int reqCount = 0;                // number of requests received
-bool servoStatus = false;
+char ssid[] = "Galaxy S21 Ultra 5G";            // 와이파이 ssid (모바일 핫스팟 사용 예정)
+char pass[] = "password";                       // 와이파이 패스워드
+int status = WL_IDLE_STATUS;                    // the Wifi radio's status
+int reqCount = 0;                               // number of requests received
+bool servoStatus = false;                       // 잠금장치의 상태
 
-WiFiEspServer server(80);
-RingBuffer buf(8);
-Servo locker;
+WiFiEspServer server(80);   // 웹서버 포트 설정(80)
+RingBuffer buf(8);          // 요청 받아오는데 사용
+Servo locker;               // 서보모터 선언
 
-void printWifiStatus();
-void sendHttpResponse(WiFiEspClient client);
-void servoLock();
-void servoUnlock();
+void printWifiStatus();                           // 와이파이 연결 상태 확인
+void sendHttpResponse(WiFiEspClient client);      // 클라이언트 접속시 표출되는 화면
+void servoLock();                                 // 잠금장치 잠금 함수
+void servoUnlock();                               // 잠금장치 해제 함수
 
 void setup()
 {
-  Serial.begin(115200);
-  Serial1.begin(9600);
+  Serial.begin(115200);  // 와이파이 이용 보드레이트
+  Serial1.begin(9600);   // 보드레이트 설정
   WiFi.init(&Serial1);
-  locker.attach(7);
+  locker.attach(7);      // 잠금장치 서보모터 핀 설정(D7)
 
-  // check for the presence of the shield
+  // 와이파이 연결 로직
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WiFi shield not present");
     // don't continue
     while (true);
   }
 
-  // attempt to connect to WiFi network
+  // 와이파이 연결 시도
   while ( status != WL_CONNECTED) {
     Serial.print("Attempting to connect to WPA SSID: ");
     Serial.println(ssid);
@@ -38,10 +38,10 @@ void setup()
     status = WiFi.begin(ssid, pass);
   }
 
-  Serial.println("You're connected to the network");
-  printWifiStatus();
+  Serial.println("You're connected to the network");  // 연결 성공시 시리얼 모니터에 메시지 출력
+  printWifiStatus();      // 와이파이 연결 상태 출력
   server.begin();
-  servoUnlock();
+  servoUnlock();          // 기본 상태 : 언락
 }
 
 
@@ -55,18 +55,13 @@ void loop()
       if (client.available()) {               // if there's bytes to read from the client,
         char c = client.read();               // read a byte, then
         buf.push(c);                          // push it to the ring buffer
-
-        // printing the stream to the serial monitor will slow down
-        // the receiving of data from the ESP filling the serial buffer
-        //Serial.write(c);
         
-        // you got two newline characters in a row
-        // that's the end of the HTTP request, so send a response
         if (buf.endsWith("\r\n\r\n")) {
           sendHttpResponse(client);
           break;
         }
 
+        // localhost/PW 주소로 GET 리퀘스트를 받았을 때, 현재 잠금장치 상태를 보고 잠금 or 잠금해제
         if (buf.endsWith("GET /PW")) {
           if (servoStatus){
             servoUnlock();
@@ -78,32 +73,34 @@ void loop()
       }
     }
     
-    // close the connection
+    // 클라이언트의 요청 종료시
     client.stop();
     Serial.println("Client disconnected");
   }
 }
 
+// 와이파이 연결 상태
 void printWifiStatus()
 {
-  // print the SSID of the network you're attached to
+  // 연결된 네트워크의 ssid
   Serial.print("SSID: ");
   Serial.println(WiFi.SSID());
 
-  // print your WiFi shield's IP address
+  // 연결된 네트워크의 로컬 ip 출력
   IPAddress ip = WiFi.localIP();
   Serial.print("IP Address: ");
   Serial.println(ip);
   
-  // print where to go in the browser
   Serial.println();
   Serial.print("To see this page in action, open a browser to http://");
   Serial.println(ip);
   Serial.println();
 }
 
+// 클라이언트의 요청시 표출되는 화면
 void sendHttpResponse(WiFiEspClient client)
 {
+  // 웹서버에 html 형식 문서 전송
   client.println("HTTP/1.1 200 OK");
   client.println("Content-type:text/html");
   client.println();
@@ -165,12 +162,14 @@ void sendHttpResponse(WiFiEspClient client)
   client.print("</html>\r\n");
 }
 
+// 잠금장치 잠금
 void servoLock(){
   Serial.println("잠금완료!!!!!!!!!!!");
   servoStatus = true;
   locker.write(180);
 }
 
+// 잠금장치 해제
 void servoUnlock(){
   Serial.println("잠금해제!!!!!!!!!!!");
   servoStatus = false;
