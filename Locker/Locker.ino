@@ -16,8 +16,7 @@ void sendHttpResponse(WiFiEspClient client);      // 클라이언트 접속시 �
 void servoLock();                                 // 잠금장치 잠금 함수
 void servoUnlock();                               // 잠금장치 해제 함수
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);  // 와이파이 이용 보드레이트
   Serial1.begin(9600);   // 보드레이트 설정
   WiFi.init(&Serial1);
@@ -45,8 +44,7 @@ void setup()
 }
 
 
-void loop()
-{
+void loop() {
   WiFiEspClient client = server.available();
   if (client) {                               // if you get a client,
     Serial.println("New client");             // print a message out the serial port
@@ -80,8 +78,7 @@ void loop()
 }
 
 // 와이파이 연결 상태
-void printWifiStatus()
-{
+void printWifiStatus() {
   // 연결된 네트워크의 ssid
   Serial.print("SSID: ");
   Serial.println(WiFi.SSID());
@@ -98,8 +95,7 @@ void printWifiStatus()
 }
 
 // 클라이언트의 요청시 표출되는 화면
-void sendHttpResponse(WiFiEspClient client)
-{
+void sendHttpResponse(WiFiEspClient client) {
   // 웹서버에 html 형식 문서 전송
   client.println("HTTP/1.1 200 OK");
   client.println("Content-type:text/html");
@@ -163,14 +159,14 @@ void sendHttpResponse(WiFiEspClient client)
 }
 
 // 잠금장치 잠금
-void servoLock(){
+void servoLock() {
   Serial.println("잠금완료!!!!!!!!!!!");
   servoStatus = true;
   locker.write(180);
 }
 
 // 잠금장치 해제
-void servoUnlock(){
+void servoUnlock() {
   Serial.println("잠금해제!!!!!!!!!!!");
   servoStatus = false;
   locker.write(0);

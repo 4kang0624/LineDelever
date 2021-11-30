@@ -7,8 +7,7 @@ Servo servoRight;
 int senceRpin = 7;  // This is our input pin
 int senceR = HIGH;  // HIGH는 장애물이 없음을 뜻함
 
-void setup()                                 // Built-in initialization block
-{
+void setup() {
   Serial.begin (9600);              // 시리얼 모니터를 사용하기 위해 보드레이트를 9600으로 설정합니다.
   pinMode(trigPin, OUTPUT);   // trigPin 핀을 출력핀으로 설정합니다.
   pinMode(echoPin, INPUT);    // echoPin 핀을 입력핀으로 설정합니다.
@@ -24,9 +23,7 @@ void setup()                                 // Built-in initialization block
   */
 }  
 
-void loop()
-
-{
+void loop() {
   long duration, distance;                   // 각 변수를 선언합니다.
   digitalWrite(trigPin, LOW);                 // trigPin에 LOW를 출력하고
   delayMicroseconds(2);                    // 2 마이크로초가 지나면
@@ -36,8 +33,8 @@ void loop()
   duration = pulseIn(echoPin, HIGH);   // echoPin핀에서 펄스값을 받아옵니다.
   distance = duration * 17 / 1000;          //  duration을 연산하여 센싱한 거리값을 distance에 저장합니다.
 
-  if (distance >= 25)       // 거리가 25cm가 넘으면
-  {
+  // 거리가 25cm가 넘으면
+  if (distance >= 25) {
     servoLeft.writeMicroseconds(1700);         // 전진
     servoRight.writeMicroseconds(1300);
     senceR = digitalRead(senceRpin);
@@ -50,10 +47,9 @@ void loop()
       servoRight.writeMicroseconds(1300);
     } 
   }
-  else                                                    // 거리가 15cm가 넘지 않거나 0보다 작지 않으면
-  {
+  else { // 거리가 15cm가 넘지 않거나 0보다 작지 않으면
     servoLeft.writeMicroseconds(1525);         // 멈춤
     servoRight.writeMicroseconds(1530);
   }
     delay(500);
-  }
+}
