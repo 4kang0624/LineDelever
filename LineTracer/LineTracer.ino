@@ -63,7 +63,7 @@ void loop()
       servoRight.writeMicroseconds(1300);
     } 
   }
-  else                                                    // 거리가 200cm가 넘지 않거나 0보다 작지 않으면
+  else                                                    // 거리가 15cm가 넘지 않거나 0보다 작지 않으면
   {
     servoLeft.writeMicroseconds(1525);         // 멈춤
     servoRight.writeMicroseconds(1530);
