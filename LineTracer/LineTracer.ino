@@ -5,7 +5,7 @@
 Servo servoLeft;                             // Declare left and right servos
 Servo servoRight;
 int senceRpin = 7;  // This is our input pin
-int senceR = HIGH;  // HIGH MEANS NO OBSTACLE
+int senceR = HIGH;  // HIGH는 장애물이 없음을 뜻함
 
 void setup()                                 // Built-in initialization block
 {
@@ -18,20 +18,7 @@ void setup()                                 // Built-in initialization block
   servoLeft.attach(13);                      // Attach left signal to pin 13
   servoRight.attach(12);                     // Attach right signal to pin 12
 
-  // Full speed forward
-  /*servoLeft.writeMicroseconds(1700);         // 전진
-  servoRight.writeMicroseconds(1300);        
-  delay(3000);                               
-   servoLeft.writeMicroseconds(1300);        //후진
-  servoRight.writeMicroseconds(1700);
-  delay(3000);
-   servoLeft.writeMicroseconds(1700);       //우회전
-  servoRight.writeMicroseconds(1700);
-  delay(3000);
-   servoLeft.writeMicroseconds(1300);       //좌회전
-  servoRight.writeMicroseconds(1300);
-  delay(3000);
- 
+  /*
   servoLeft.detach();                        // Stop sending servo signals
   servoRight.detach();
   */
