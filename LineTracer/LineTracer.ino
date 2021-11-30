@@ -49,7 +49,7 @@ void loop()
   duration = pulseIn(echoPin, HIGH);   // echoPin핀에서 펄스값을 받아옵니다.
   distance = duration * 17 / 1000;          //  duration을 연산하여 센싱한 거리값을 distance에 저장합니다.
 
-  if (distance >= 15)       // 거리가 15cm가 넘으면
+  if (distance >= 25)       // 거리가 25cm가 넘으면
   {
     servoLeft.writeMicroseconds(1700);         // 전진
     servoRight.writeMicroseconds(1300);
@@ -69,5 +69,4 @@ void loop()
     servoRight.writeMicroseconds(1530);
   }
     delay(500);
-  
   }
